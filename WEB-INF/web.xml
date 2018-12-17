@@ -1,0 +1,35 @@
+<web-app> 
+  <servlet> 
+     <servlet-name>HelloServlet</servlet-name> 
+     <servlet-class>HelloServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>HelloServlet2</servlet-name> 
+    <servlet-class>HelloServlet2</servlet-class> 
+  </servlet>
+  <servlet>
+    <servlet-name>Sample2</servlet-name>
+    <servlet-class>Sample2</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>BankServlet</servlet-name>
+    <servlet-class>BankServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping> 
+    <servlet-name>HelloServlet</servlet-name>
+    <url-pattern>/greeting</url-pattern> 
+  </servlet-mapping>
+  <servlet-mapping> 
+    <servlet-name>HelloServlet2</servlet-name>
+    <url-pattern>/greeting2</url-pattern> 
+  </servlet-mapping>
+  <servlet-mapping> 
+    <servlet-name>Sample2</servlet-name>
+    <url-pattern>/carshop</url-pattern> 
+  </servlet-mapping>
+  <servlet-mapping> 
+    <servlet-name>BankServlet</servlet-name>
+    <url-pattern>/bank</url-pattern> 
+  </servlet-mapping>
+</web-app> 

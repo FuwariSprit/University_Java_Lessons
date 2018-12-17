@@ -1,0 +1,22 @@
+<!-- 286120 武田佑樹 課題10 -->
+
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset = "utf-8">
+    <title>意識高い銀行</title>
+  </head>
+  <body>
+    <h1>お引き出し</h1>
+    <p>金額を入力してください。</p>
+    <form action="bank" method="GET">
+      <p>名前:<input type="text" name="name"></p>
+      <p>金額:<input tupe="text" name="amount"></p>
+      <input type="submit" value="了解">
+      <input type="reset" value="リセット">
+      <input type="hidden" name="command" value="withdraw">
+    </form>
+    <input type="button" value="メニューへ戻る" onClick="location.href='index.html'">    
+    <p>286120 武田佑樹 課題10</p>
+  </body>
+</html>

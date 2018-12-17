@@ -1,0 +1,258 @@
+Script started on Wed Dec 20 10:28:52 2017
+u286120@cse-ssh2[31]: cat BankServlet.java
+// 286120 武田佑樹 課題9                                                           
+
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class BankServlet extends HttpServlet {
+    
+    // 口座の管理をするオブジェクト
+    private SimpleBank bank;
+    private int jadge;
+    // pathを取得するオブジェクト
+    private ServletContext context = getServletContext();
+
+    public BankServlet(){
+        bank = new SimpleBank();
+    }
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException{
+        try{
+
+            // フォームデータの取得                                                
+            String bankName = request.getParameter("name");
+
+            // 口座開設処理
+            jadge = bank.open(bankName);
+
+            // コンテンツタイプの設定                                              
+            response.setContentType("text/html; charset=UTF-8");
+
+	    // index.htmlの物理パスの取得
+	    String path = context.getRealPath("/index.html");
+
+            // HTML文書の書き出し
+            PrintWriter pw = response.getWriter();                                    
+            if(jadge == 0){
+                // 口座開設成功のHTML生成
+                pw.println("<!DOCTYPE html>\n<html>\n"
+                           + "<head>\n<title>意識高く口座開設</title>\n</head>\n"
+                           + "<body>\n"
+                           + "<h1>口座開設</h1>\n"
+                           + "<p>" + bankName + "様の口座を開設しました。</p>\n"
+                           + "<input type='button' value='メニューへ戻る' onClick='location.href='" + path + "''>\n"
+                           + "</body>\n"
+                           + "</html>");
+            } else {
+                // 口座開設失敗のHTML生成
+                pw.println("<!DOCTYPE html><html>\n"
+                           + "<head>\n<title>意識高く口座開設</title>\n</head>\n"
+                           + "<body>\n"
+                           + "<h1>口座開設</h1>\n"
+                           + "<p>" + bankName + "様と同名の口座がすでに存在しています。</p>\n"
+                           + "<input type='button' value='メニューへ戻る' onClick='location.href='" + path + "''>\n"
+                           + "</body>\n"
+                           + "</html>");
+                
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+u286120@cse-ssh2[32]: cat SimpleAccount.java
+// 武田佑樹 286120 課題5 (1)
+public class SimpleAccount {
+    private String name;
+    private int balance;
+
+    public SimpleAccount(String myName){
+        name = myName;
+        balance = 0;
+    }
+    
+    public int deposit(int amount){
+        if(amount <= 0){
+            return -3;
+        } else {
+            balance += amount;
+            return 0;
+        }
+    }
+    
+    public int withdraw(int amount){
+        if(amount <= 0){
+            return -3;
+        } else if(amount > balance){
+            return -1;
+        } else {
+            balance -= amount;
+            return 0;
+        }
+    }
+    
+    public int showBalance(){
+        return balance;
+    }
+    
+}
+u286120@cse-ssh2[33]: cat SimpleBank.java
+// 武田佑樹 286120 課題6
+
+import java.util.Hashtable;
+
+public class SimpleBank {
+    private Hashtable<String, SimpleAccount> customer;
+    private SimpleAccount user;
+    private boolean search;
+    private int judge;
+    
+    public SimpleBank() {
+        customer = new Hashtable<String, SimpleAccount>();
+    }
+
+    public int open(String name){
+        search = customer.containsKey(name);
+
+        if(search){
+            return -7;
+        } else {
+            user = new SimpleAccount(name);
+            customer.put(name, user);
+            return 0;
+        }
+    }
+    
+    public int close(String name){
+        search = customer.containsKey(name);
+
+        if(!search){
+            return -7;
+        } else {
+            user = customer.get(name);
+            judge = user.showBalance();
+
+            if(judge > 0){
+                return -1;
+            } else {
+                customer.remove(name);
+                return 0;
+            }
+        }
+    }
+    
+    public int deposit(String name, int amount){
+        search = customer.containsKey(name);
+        
+        if(!search){
+            return -7;
+        } else {
+            user = customer.get(name);
+            judge = user.deposit(amount);
+
+            if(judge == -3){
+                return -3;
+            } else {
+                return 0;
+            }
+        }
+    }
+    
+    public int withdraw(String name, int amount){
+        search = customer.containsKey(name);
+        
+        if(!search){
+            return -7;
+        } else {
+            user = customer.get(name);
+            judge = user.withdraw(amount);
+            
+            if(judge == -3){
+                return -3;
+            } else if(judge == -1){
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+    }
+        
+    public int showBalance(String name){
+        search = customer.containsKey(name);
+
+        if(!search){
+            return -7;
+        } else {
+            user = customer.get(name);
+            judge = user.showBalance();
+            
+            return judge;
+        }
+    }
+}
+u286120@cse-ssh2[34]: emacs ..../[K[K[K/../oepn[K[K[K[Kopen.html [P[P[P[P[P[1@c[1@a[1@t
+<!-- 286120 武田佑樹 課題8 -->
+
+<!DOCTYPE>
+<html>
+  <head>
+    <meta charset = "utf-8">
+    <title>意識高い銀行</title>
+  </head>
+  <body>
+    <h1>口座開設</h1>
+    <p>口座の名前を入れるがよろし</p>
+    <form action="bank" method="GET">
+      <p>名前:<input type="text" name="name"></p>
+      <input type="submit" value="了解">
+      <input type="reset" value="リセット">
+    </form>
+    <input type="button" value="メニューへ戻る" onClick="location.href='index.html'">
+  </body>
+</html>
+u286120@cse-ssh2[35]: cat ../web.xml 
+<web-app> 
+  <servlet> 
+     <servlet-name>HelloServlet</servlet-name> 
+     <servlet-class>HelloServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>HelloServlet2</servlet-name> 
+    <servlet-class>HelloServlet2</servlet-class> 
+  </servlet>
+  <servlet>
+    <servlet-name>Sample2</servlet-name>
+    <servlet-class>Sample2</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>BankServlet</servlet-name>
+    <servlet-class>BankServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping> 
+    <servlet-name>HelloServlet</servlet-name>
+    <url-pattern>/greeting</url-pattern> 
+  </servlet-mapping>
+  <servlet-mapping> 
+    <servlet-name>HelloServlet2</servlet-name>
+    <url-pattern>/greeting2</url-pattern> 
+  </servlet-mapping>
+  <servlet-mapping> 
+    <servlet-name>Sample2</servlet-name>
+    <url-pattern>/carshop</url-pattern> 
+  </servlet-mapping>
+  <servlet-mapping> 
+    <servlet-name>BankServlet</servlet-name>
+    <url-pattern>/bank</url-pattern> 
+  </servlet-mapping>
+</web-app> 
+u286120@cse-ssh2[36]: javac BankServlet.java
+u286120@cse-ssh2[37]: javac SimpleAccount.java
+u286120@cse-ssh2[38]: javac SimpleBank.java
+u286120@cse-ssh2[39]: exit
+exit
+
+Script done on Wed Dec 20 10:30:42 2017

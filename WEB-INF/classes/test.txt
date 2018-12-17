@@ -1,0 +1,112 @@
+Script started on Tue Dec  5 00:38:23 2017
+u286120@cse-ssh2[31]: cat HelloServlet.java
+// u286120 武田佑樹 課題7(2)
+
+import java.io.IOException;
+import java.io.PrintWriter;
+// import java.util.Date;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class HelloServlet extends HttpServlet {
+    
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        //日本語(UTF-8コード)を含むHTMLデータを返す設定にする。
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println("<html>");
+        out.println("<body>");
+        out.println("<p>こんにちわ</p>");
+        out.println("<p>286120 武田佑樹</p>");
+        out.println("</body>");
+        out.println("</html>");
+        out.flush();
+        out.close();
+    }
+}
+ 
+u286120@cse-ssh2[32]: cat HelloServlet2.java
+// u286120 武田佑樹 課題7(2)
+
+import java.io.IOException;
+import java.io.PrintWriter;
+//import java.util.Date;
+import java.util.Calendar;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class HelloServlet2 extends HttpServlet {
+    
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        Calendar now = Calendar.getInstance();
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        
+        //日本語(UTF-8コード)を含むHTMLデータを返す設定にする。
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println("<html>");
+        out.println("<body>");
+        if(hour>=6 && hour<=12){
+            out.println("<p>おはよう</p>");
+        } else if(hour<=17){
+            out.println("<p>こんにちわ</p>");
+        } else {
+            out.println("<p>こんばんわ</p>");
+        }
+        out.println("<p>286120 武田佑樹</p>");
+        out.println("</body>");
+        out.println("</html>");
+        out.flush();
+        out.close();
+    }
+}
+ 
+u286120@cse-ssh2[33]: cd ../
+/home0/h28/u286120/webapps/WEB-INF
+u286120@cse-ssh2[34]: ls
+classes/	web.xml*
+u286120@cse-ssh2[35]: cat web.xml 
+<web-app> 
+  <servlet> 
+     <servlet-name>HelloServlet</servlet-name> 
+     <servlet-class>HelloServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>HelloServlet2</servlet-name> 
+    <servlet-class>HelloServlet2</servlet-class> 
+  </servlet>
+  
+  <servlet-mapping> 
+    <servlet-name>HelloServlet</servlet-name>
+    <url-pattern>/greeting</url-pattern> 
+  </servlet-mapping>
+  <servlet-mapping> 
+    <servlet-name>HelloServlet2</servlet-name>
+    <url-pattern>/greeting2</url-pattern> 
+  </servlet-mapping>
+</web-app> 
+u286120@cse-ssh2[36]: cd[K[Kls
+classes/	web.xml*
+u286120@cse-ssh2[37]: cd classes/
+/home0/h28/u286120/webapps/WEB-INF/classes
+u286120@cse-ssh2[38]: ls
+HelloServlet.class*	HelloServlet2.class*	test.txt
+HelloServlet.java	HelloServlet2.java
+u286120@cse-ssh2[39]: checkstule[K[K[Kyle HelloServlet.java
+監査を開始しています...
+監査が完了しました。
+u286120@cse-ssh2[40]: checkstyle HelloServlet.java[1@2
+監査を開始しています...
+監査が完了しました。
+u286120@cse-ssh2[41]: e[Kjavac HelloServlet.java
+u286120@cse-ssh2[42]: javac HelloServlet.java[1@2
+u286120@cse-ssh2[43]: exit
+exit
+
+Script done on Tue Dec  5 00:39:35 2017
